@@ -1,6 +1,6 @@
 class TagCloud
 
-  attr_reader :user,:tags,:min,:tags_divisor, :tags_for_cloud_90days, :min_90days,:cut_off_3months,:tags_divisor_90days
+  attr_reader :user,:tags,:min,:divisor, :tags_for_cloud_90days, :min_90days,:cut_off_3months,:divisor_90days
 
   def compute
     get_stats_tags
@@ -35,7 +35,7 @@ class TagCloud
       @min = [t.count.to_i, @min].min
     }
 
-    @tags_divisor = ((max - @min) / levels) + 1
+    @divisor = ((max - @min) / levels) + 1
 
     # Get the tag cloud for all tags for actions
     query = "SELECT tags.id, tags.name AS name, count(*) AS count"
@@ -59,6 +59,6 @@ class TagCloud
       @min_90days = [t.count.to_i, @min_90days].min
     }
 
-    @tags_divisor_90days = ((max_90days - @min_90days) / levels) + 1
+    @divisor_90days = ((max_90days - @min_90days) / levels) + 1
   end
 end
