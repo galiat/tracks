@@ -1,6 +1,6 @@
 class TagCloud
 
-  attr_reader :user,:tags,:tags_min,:tags_divisor, :tags_for_cloud_90days, :tags_min_90days,:cut_off_3months,:tags_divisor_90days
+  attr_reader :user,:tags,:min,:tags_divisor, :tags_for_cloud_90days, :min_90days,:cut_off_3months,:tags_divisor_90days
 
   def compute
     get_stats_tags
@@ -29,13 +29,13 @@ class TagCloud
     query << " LIMIT 100"
     @tags = Tag.find_by_sql(query).sort_by { |tag| tag.name.downcase }
 
-    max, @tags_min = 0, 0
+    max, @min = 0, 0
     @tags.each { |t|
       max = [t.count.to_i, max].max
-      @tags_min = [t.count.to_i, @tags_min].min
+      @min = [t.count.to_i, @min].min
     }
 
-    @tags_divisor = ((max - @tags_min) / levels) + 1
+    @tags_divisor = ((max - @min) / levels) + 1
 
     # Get the tag cloud for all tags for actions
     query = "SELECT tags.id, tags.name AS name, count(*) AS count"
@@ -53,12 +53,12 @@ class TagCloud
       [query, user.id, @cut_off_3months, @cut_off_3months]
     ).sort_by { |tag| tag.name.downcase }
 
-    max_90days, @tags_min_90days = 0, 0
+    max_90days, @min_90days = 0, 0
     @tags_for_cloud_90days.each { |t|
       max_90days = [t.count.to_i, max_90days].max
-      @tags_min_90days = [t.count.to_i, @tags_min_90days].min
+      @min_90days = [t.count.to_i, @min_90days].min
     }
 
-    @tags_divisor_90days = ((max_90days - @tags_min_90days) / levels) + 1
+    @tags_divisor_90days = ((max_90days - @min_90days) / levels) + 1
   end
 end
