@@ -9,7 +9,7 @@ class StatsController < ApplicationController
     cloud = TagCloud.new(current_user,@cut_off_3months)
     cloud.get_stats_tags
 
-    @tags_for_cloud = cloud.tags_for_cloud
+    @tags_for_cloud = cloud.tags
 
     @tags_min = cloud.tags_min
 
