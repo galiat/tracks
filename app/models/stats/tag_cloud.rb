@@ -1,14 +1,14 @@
 class TagCloud
 
-  attr_reader :user,:tags,:min,:divisor, :tags_for_cloud_90days, :min_90days,:cut_off_3months,:divisor_90days
+  attr_reader :user,:tags,:min,:divisor, :tags_for_cloud_90days, :min_90days,:cut_off,:divisor_90days
 
   def compute
     get_stats_tags
   end
 
-  def initialize(user,cut_off_3months)
+  def initialize(user,cut_off)
     @user = user
-    @cut_off_3months = cut_off_3months
+    @cut_off = cut_off
   end
 
   # tag cloud code inspired by this article
@@ -50,7 +50,7 @@ class TagCloud
     query << " ORDER BY count DESC, name"
     query << " LIMIT 100"
     @tags_for_cloud_90days = Tag.find_by_sql(
-      [query, user.id, @cut_off_3months, @cut_off_3months]
+      [query, user.id, @cut_off, @cut_off]
     ).sort_by { |tag| tag.name.downcase }
 
     max_90days, @min_90days = 0, 0
