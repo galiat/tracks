@@ -6,7 +6,7 @@ class TagCloud
     get_stats_tags
   end
 
-  def initialize(user,cut_off)
+  def initialize(user,cut_off=nil)
     @user = user
     @cut_off = cut_off
   end
@@ -18,7 +18,10 @@ class TagCloud
     levels=10
 
     # Get the tag cloud for all tags for actions
-    params = [sql, user.id]
+    params = [sql(@cut_off), user.id]
+    if @cut_off
+      params += [@cut_off, @cut_off]
+    end
     @tags = Tag.find_by_sql(
       params
     ).sort_by { |tag| tag.name.downcase }
@@ -28,21 +31,7 @@ class TagCloud
       max = [t.count.to_i, max].max
       @min = [t.count.to_i, @min].min
     }
-
     @divisor = ((max - @min) / levels) + 1
-
-    params = [sql(cut_off), user.id, @cut_off, @cut_off]
-    @tags_for_cloud_90days = Tag.find_by_sql(
-      params
-    ).sort_by { |tag| tag.name.downcase }
-
-    max_90days, @min_90days = 0, 0
-    @tags_for_cloud_90days.each { |t|
-      max_90days = [t.count.to_i, max_90days].max
-      @min_90days = [t.count.to_i, @min_90days].min
-    }
-
-    @divisor_90days = ((max_90days - @min_90days) / levels) + 1
   end
 
   private
