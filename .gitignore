@@ -26,3 +26,4 @@ tags
 tracks
 tracks_test
 .lockdown
+.ruby-version
