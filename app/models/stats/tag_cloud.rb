@@ -1,26 +1,9 @@
 class TagCloud
-
-  attr_reader :user,:min,:divisor,:cut_off
-  #tags_for_cloud_90days,min_90days,divisor_90days
-  def compute
-    get_stats_tags
-  end
+  attr_reader :user,:divisor,:cut_off
 
   def initialize(user,cut_off=nil)
     @user = user
     @cut_off = cut_off
-  end
-
-  # tag cloud code inspired by this article
-  # http://www.juixe.com/techknow/index.php/2006/07/15/acts-as-taggable-tag-cloud/
-  # Get the tag cloud for all tags for actions
-  def get_stats_tags
-    max, @min = 0, 0
-    tags.each { |t|
-      max = [t.count.to_i, max].max
-      @min = [t.count.to_i, @min].min
-    }
-    @divisor = ((max - @min) / levels) + 1
   end
 
   def tags
@@ -34,10 +17,26 @@ class TagCloud
     @tags
   end
 
+  def divisor
+    @divisor ||= ((max - min) / levels) + 1
+  end
+
+  def min
+    0
+  end
+
   private
+
+  def tag_counts
+   @tag_counts ||= tags.map {|t| t.count.to_i}
+  end
 
   def levels
     10
+  end
+
+  def max
+    tag_counts.max
   end
 
   # TODO: parameterize limit

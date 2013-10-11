@@ -6,13 +6,8 @@ class StatsController < ApplicationController
   append_before_filter :init
 
   def get_stats_tags
-    cloud = TagCloud.new(current_user)
-    cloud.get_stats_tags
-    @cloud = cloud
-
-    cloud = TagCloud.new(current_user, @cut_off_3months)
-    cloud.get_stats_tags
-    @cloud_90days = cloud
+    @cloud = TagCloud.new(current_user)
+    @cloud_90days = TagCloud.new(current_user, @cut_off_3months)
   end
 
 
