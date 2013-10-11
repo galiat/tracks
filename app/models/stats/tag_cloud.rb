@@ -6,6 +6,10 @@ class TagCloud
     @cut_off = cut_off
   end
 
+  def relative_size(tag)
+    (tag.count.to_i - min) / divisor
+  end
+
   def tags
     unless @tags
       params = [sql(@cut_off), user.id]
@@ -17,6 +21,9 @@ class TagCloud
     @tags
   end
 
+
+private
+
   def divisor
     @divisor ||= ((max - min) / levels) + 1
   end
@@ -24,8 +31,6 @@ class TagCloud
   def min
     0
   end
-
-  private
 
   def tag_counts
    @tag_counts ||= tags.map {|t| t.count.to_i}
