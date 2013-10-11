@@ -1,12 +1,14 @@
 class TagCloud
 
-  attr_reader :current_user
+  attr_reader :current_user,:tags_for_cloud,:tags_min,:tags_divisor, :tags_for_cloud_90days, :tags_min_90days,:cut_off_3months,:tags_divisor_90days
 
   def compute
+    get_stats_tags
   end
 
-  def initialize(current_user)
+  def initialize(current_user,cut_off_3months)
     @current_user = current_user
+    @cut_off_3months = cut_off_3months
   end
 
   def get_stats_tags
